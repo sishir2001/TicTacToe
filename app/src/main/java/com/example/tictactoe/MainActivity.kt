@@ -2,6 +2,7 @@ package com.example.tictactoe
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 //import com.example.tictactoe.TicTacToe as TicTacToe1
@@ -11,6 +12,11 @@ class MainActivity : AppCompatActivity() {
     private val arr1 : MutableList<Int> = mutableListOf(0,0,0,0,0,0)
     private var check = 0
     private var count = 0 // counting no of blocks are disabled
+    private var diagO = 0
+    private var rdiagO = 0
+    private var rdiagX = 0
+    private var diagX = 0
+
     lateinit var playerO : EditText
     lateinit var playerX : EditText
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,16 +50,28 @@ class MainActivity : AppCompatActivity() {
             item.btn.text = getString(R.string.O)
             item.btn.isEnabled = false
             // TODO : add frequency to the ith and jth table
-            arr0[item.i]++
-            arr0[3+item.j]++
+            if(item.i == item.j)
+                diagO++
+            else if(item.i+item.j == 2)
+                rdiagO++
+            else{
+                arr0[item.i]++
+                arr0[3+item.j]++
+            }
         }
         else{
             check = 0
             item.btn.text = getString(R.string.X)
             item.btn.isEnabled = false
             // TODO : add frequency to the ith and jth table
-            arr1[item.i]++
-            arr1[3+item.j]++
+            if(item.i == item.j)
+                diagX++
+            else if(item.i+item.j == 2)
+                rdiagX++
+            else{
+                arr1[item.i]++
+                arr1[3+item.j]++
+            }
         }
         if(count == 9 && checkComplete() == -1)
             Toast.makeText(this,"Draw!!",Toast.LENGTH_SHORT).show()
@@ -68,32 +86,26 @@ class MainActivity : AppCompatActivity() {
     fun checkComplete():Int{
         // TODO : write conditions to choose a winner
         // traverse through both the arrays to check whether an element is 3 or all the elements are 1
-        var countOneO = 0
         var res : Int = -1
-        var countOneX = 0
-        for(a in arr0){
-            if(a == 3){
-                res = 0
-                break
-            }
-            else if(a == 1)
-                countOneO++
-        }
-        if(countOneO == 6){
+        if(diagO == 3 || rdiagO == 3)
             res = 0
-        }
-        else{
-            for(b in arr1){
-                if(b == 3){
+        else if(diagX == 3|| rdiagX == 3)
+            res = 1
+        else {
+            for (a in arr0) {
+                if (a == 3) {
+                    res = 0
+                    break
+                }
+            }
+            for (b in arr1) {
+                if (b == 3) {
                     res = 1
                     break
                 }
-                else if(b == 1)
-                    countOneX++
             }
-            if(countOneX == 6)
-                res = 1
         }
+        Log.i("MainActivity","res = $res")
         return res
     }
 }
