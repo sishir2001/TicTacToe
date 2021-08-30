@@ -1,5 +1,6 @@
 package com.example.tictactoe
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -36,14 +37,15 @@ class MainActivity : AppCompatActivity() {
             TicTacToe(findViewById(R.id.button21),2,1),
             TicTacToe(findViewById(R.id.button22),2,2)
         )
-        startPlay(btns)
+        val intent = Intent(this,CongratsActivity::class.java)
+        startPlay(btns,intent)
     }
-    private fun startPlay(view:List<TicTacToe>){
+    private fun startPlay(view:List<TicTacToe>,intent:Intent){
        for(item in view){
-           item.btn.setOnClickListener { createXO(item) }
+           item.btn.setOnClickListener { createXO(item,intent) }
        }
     }
-    private fun createXO(item: TicTacToe){
+    private fun createXO(item: TicTacToe,intent:Intent){
         count ++
         if(check == 0){
             check = 1
@@ -54,10 +56,8 @@ class MainActivity : AppCompatActivity() {
                 diagO++
             else if(item.i+item.j == 2)
                 rdiagO++
-            else{
-                arr0[item.i]++
-                arr0[3+item.j]++
-            }
+            arr0[item.i]++
+            arr0[3+item.j]++
         }
         else{
             check = 0
@@ -68,19 +68,24 @@ class MainActivity : AppCompatActivity() {
                 diagX++
             else if(item.i+item.j == 2)
                 rdiagX++
-            else{
-                arr1[item.i]++
-                arr1[3+item.j]++
-            }
+            arr1[item.i]++
+            arr1[3+item.j]++
         }
-        if(count == 9 && checkComplete() == -1)
-            Toast.makeText(this,"Draw!!",Toast.LENGTH_SHORT).show()
+        if(count == 9 && checkComplete() == -1){
+            intent.putExtra("CON","Draw")
+            intent.putExtra("NAME","!!")
+            startActivity(intent)
+        }
         else if(checkComplete() == 0){
-            Toast.makeText(this,"${playerO.text} Has Won",Toast.LENGTH_SHORT).show()
-            // disabling all the buttons
+            intent.putExtra("CON","Congratulations")
+            intent.putExtra("NAME","${playerO.text}")
+            startActivity(intent)
         }
-        else if(checkComplete() == 1)
-            Toast.makeText(this,"${playerX.text} Has Won",Toast.LENGTH_SHORT).show()
+        else if(checkComplete() == 1){
+            intent.putExtra("CON","Congratulations")
+            intent.putExtra("NAME","${playerX.text}")
+            startActivity(intent)
+        }
 
     }
     fun checkComplete():Int{

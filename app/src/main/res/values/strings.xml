@@ -4,6 +4,7 @@
     <string name="player_two_x">Player Two : X</string>
     <string name="player_2">player 2</string>
     <string name="player_1">player 1</string>
+    <string name="guest_congrats">%1$s %2$s</string>
     <string name="X">X</string>
     <string name="O">O</string>
 </resources>
